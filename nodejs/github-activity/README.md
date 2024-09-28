@@ -1,4 +1,4 @@
 # GitHub User Activity
 
 ## Project URL
-https://roadmap.sh/projects/github-user-activity
+[github-user-activity](https://roadmap.sh/projects/github-user-activity)
