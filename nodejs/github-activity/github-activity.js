@@ -1,6 +1,26 @@
 #!/usr/bin/env node
 const argv = process.argv;
 const argLen = argv.length;
+
+function outputFormat(type, repo, count = null) {
+  switch(type) {
+    case 'PushEvent':
+      return `Pushed ${count} commits to ${repo}`;
+    case 'CreateEvent':
+      return `Created new repository ${repo}`;
+    case 'WatchEvent':
+      return `Starred ${repo}`;
+    case 'IssuesEvent':
+      return `Opened a new issue in  ${repo}`;
+    case 'DeleteEvent':
+      return `Deleted a repository ${repo}`;
+    case 'PullRequestEvent':
+      return `Created ${count} pull request in ${repo}`
+    default:
+      return `${type.replace("Event", "")} in ${repo}`
+  }
+}
+
 if (argLen != 3) {
   console.log("Invalid number of arguments !!");
 } else {
@@ -17,7 +37,11 @@ if (argLen != 3) {
       }
       activity[event.type][event.repo.name] += 1
     }
-    console.log(activity)
+    for(let event in activity) {
+      for(let repo in activity[event]) {
+        console.log(outputFormat(event, repo, activity[event][repo]));
+      }
+    }
   }).catch((err) => {
       console.log(err)
     })
