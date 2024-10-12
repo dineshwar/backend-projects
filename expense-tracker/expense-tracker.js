@@ -1,3 +1,5 @@
 #!/usr/bin/env node
-const arg = process.argv;
-console.log(arg)
+const args = process.argv;
+const myArgs = args.slice(2);
+
+console.log(myArgs)
