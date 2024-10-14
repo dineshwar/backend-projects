@@ -4,6 +4,7 @@
   "description": "Expense tracker cli",
   "main": "expense-tracker.js",
   "scripts": {
+    "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dineshwar R",
