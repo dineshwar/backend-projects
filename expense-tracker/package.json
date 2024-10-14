@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
   }
 }
