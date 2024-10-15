@@ -2,6 +2,7 @@
   "name": "expense-tracker",
   "version": "1.0.0",
   "description": "Expense tracker cli",
+  "type": "module",
   "main": "expense-tracker.js",
   "scripts": {
     "build": "npx tsc",

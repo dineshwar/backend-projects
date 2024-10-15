@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+#!/usr/bin/env deno
 
-const { Command } = require('commander');
+import { Command } from 'commander';
 
 const expenseTrackerCli = new Command();
 
