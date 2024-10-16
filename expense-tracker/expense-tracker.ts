@@ -1,5 +1,6 @@
 #!/usr/bin/env deno
 
+import fs from 'node:fs';
 import { Command } from 'commander';
 
 const expenseTrackerCli = new Command();
@@ -7,6 +8,12 @@ const expenseTrackerCli = new Command();
 interface AddOptions  {
   description: string;
   amount: number;
+}
+let expenseList:string;
+try {
+  expenseList = fs.readFileSync('./expense.json', 'utf8');
+} catch(error){
+  expenseList = '{}';
 }
 
 expenseTrackerCli
