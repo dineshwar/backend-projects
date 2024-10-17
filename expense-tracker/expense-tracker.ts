@@ -9,8 +9,16 @@ interface AddOptions  {
   description: string;
   amount: number;
 }
+
+interface Expense {
+    id: number;
+    date: string;
+    description: string;
+    amount: number;
+}
+
 let expenseList = {
-  expenses:[],
+  expenses:[] as Expense[],
   next_id: 1,
 };
 try {
