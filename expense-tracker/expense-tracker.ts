@@ -9,11 +9,14 @@ interface AddOptions  {
   description: string;
   amount: number;
 }
-let expenseList:string;
+let expenseList = {
+  expenses:[],
+  next_id: 1,
+};
 try {
-  expenseList = fs.readFileSync('./expense.json', 'utf8');
+  expenseList  = JSON.parse(fs.readFileSync('./expense.json', 'utf8'));
 } catch(error){
-  expenseList = '{}';
+   fs.writeFileSync('./expense.json', JSON.stringify(expenseList));
 }
 
 expenseTrackerCli
@@ -25,12 +28,22 @@ expenseTrackerCli
   .requiredOption('--amount <amount>', 'Amount of the expense')
   .action((options: AddOptions) => {
     const { description, amount } = options;
+    const date = new Date();
+    const formattedDate = date.toISOString().split('T')[0];
+    const addExpense = {
+      id: expenseList['next_id'],
+      date: formattedDate,
+      description: description,
+      amount: amount
+    }
+    expenseList.expenses.push(addExpense);
+    expenseList.next_id += 1
+    fs.writeFileSync('./expense.json', JSON.stringify(expenseList));
     console.log(`${description} ${amount}`)
   });
   
   expenseTrackerCli.command('list')
     .action(() => {
-
   })
 
   expenseTrackerCli.command('summary')
