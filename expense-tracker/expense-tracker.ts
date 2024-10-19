@@ -1,7 +1,8 @@
-#!/usr/bin/env deno
-
+#!/usr/bin/env -S deno run -A
 import fs from 'node:fs';
 import { Command } from 'commander';
+
+const EXPENSE_FILE_PATH = './expense.json';
 
 const expenseTrackerCli = new Command();
 
@@ -17,14 +18,24 @@ interface Expense {
     amount: number;
 }
 
-let expenseList = {
+interface ExpenseList {
+  expenses: Expense[];
+  next_id: number;
+}
+
+let expenseList: ExpenseList = {
   expenses:[] as Expense[],
   next_id: 1,
 };
 try {
-  expenseList  = JSON.parse(fs.readFileSync('./expense.json', 'utf8'));
+  expenseList  = JSON.parse(fs.readFileSync(EXPENSE_FILE_PATH, 'utf8'));
 } catch(error){
-   fs.writeFileSync('./expense.json', JSON.stringify(expenseList));
+   fs.writeFileSync(EXPENSE_FILE_PATH, JSON.stringify(expenseList));
+}
+
+const writeToFile = (expenses: ExpenseList) => {
+  fs.writeFileSync(EXPENSE_FILE_PATH, JSON.stringify(expenses));
+  return true;
 }
 
 expenseTrackerCli
@@ -45,13 +56,17 @@ expenseTrackerCli
       amount: amount
     }
     expenseList.expenses.push(addExpense);
-    expenseList.next_id += 1
-    fs.writeFileSync('./expense.json', JSON.stringify(expenseList));
-    console.log(`${description} ${amount}`)
+    expenseList.next_id += 1;
+    writeToFile(expenseList)
+    console.log(`Expense added successfully (ID: ${addExpense.id})`);
   });
   
   expenseTrackerCli.command('list')
     .action(() => {
+      console.log("ID     Date       Description         Amount");
+      for(let expense of expenseList.expenses) {
+         console.log(`${expense.id}     ${expense.date}       ${expense.description}         $${expense.amount}`);
+      }
   })
 
   expenseTrackerCli.command('summary')
