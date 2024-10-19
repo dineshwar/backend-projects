@@ -53,7 +53,7 @@ expenseTrackerCli
       id: expenseList['next_id'],
       date: formattedDate,
       description: description,
-      amount: amount
+      amount: Number(amount)
     }
     expenseList.expenses.push(addExpense);
     expenseList.next_id += 1;
@@ -70,14 +70,36 @@ expenseTrackerCli
   })
 
   expenseTrackerCli.command('summary')
-    .option('--month').action((options) => {
-
+    .option('--month <number>').action((options) => {
+      let totExpense = 0;
+      const {month} = options;
+      if(month) {
+        const summaryMonth = Number(month)
+        if (summaryMonth <= 0 || summaryMonth >= 12 ) {
+          console.log("Error: Provide a valid month");
+        }
+        expenseList.expenses.forEach((expense) => {
+          const exDate = new Date(expense.date);
+          const exMonth = exDate.getMonth() + 1;
+          if(exMonth == summaryMonth) {
+            totExpense += expense.amount;
+          }
+        });
+      } else {
+         totExpense = expenseList.expenses.reduce((acc, expense) => acc + expense.amount, 0)
+      }
+      console.log(`Total expenses: $${totExpense}`)
+      
   })
   
   expenseTrackerCli.command('delete')
-    .requiredOption('--id')
+    .requiredOption('--id <id>')
     .action((options) => {
-
+    const {id} = options;
+    const newExpenses = expenseList.expenses.filter((ex) => ex.id != id)
+    expenseList.expenses = newExpenses;
+    writeToFile(expenseList)
+    console.log("Expense deleted successfully");
   })
 
 expenseTrackerCli.parse();
