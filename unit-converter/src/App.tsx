@@ -5,6 +5,7 @@ function App() {
 
   return (
     <>
+        <h1>Unit Converter</h1>
     </>
   )
 }
