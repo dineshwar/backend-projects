@@ -1,6 +1,13 @@
 import express, { Express, Request, Response } from "express";
-
+import cors from "cors";
 const app: Express = express();
+
+// Define the CORS options
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 type LengthUnit = "mm" | "cm" | "m" | "km" | "in" | "ft" | "yd" | "mi";
@@ -58,7 +65,7 @@ app.post("/api/convert/length", (req: Request, res: Response) => {
   });
 });
 
-app.get("/api/convert/weight", (req: Request, res: Response) => {
+app.post("/api/convert/weight", (req: Request, res: Response) => {
   const conversionRates: Record<WeightUnit, number> = {
     mg: 0.001, // 1 mg = 0.001 g
     g: 1, // base unit is grams
@@ -83,7 +90,7 @@ app.get("/api/convert/weight", (req: Request, res: Response) => {
   });
 });
 
-app.get("/api/convert/temperature", (req: Request, res: Response) => {
+app.post("/api/convert/temperature", (req: Request, res: Response) => {
   const { input, from, to }: PayloadTemperatureRequest = req.body;
   if (from == to) {
     res.json({
