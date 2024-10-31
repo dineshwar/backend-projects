@@ -1,13 +1,16 @@
 #!/usr/bin/env -S deno run -A
 import readline from 'node:readline';
 
+const choices = [1, 2, 3];
+const choicesName = ['Easy', 'Medium', 'Hard'];
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 const askInput = (question: string): Promise<number> => {
   return new Promise((resolve) => {
-    rl.prompt(question, (answer:number) => {
+    rl.question(question, (answer:number) => {
       resolve(Number(answer));
     })
   });
@@ -23,7 +26,11 @@ async function main() {
   console.log("2. Medium (5 chances)");
   console.log("3. Hard (3 chances)");
   const choice = await askInput("Enter your choice: ");
-  console.log(choice);
+  if ( choices.includes(choice) ) {
+    console.log(`Great! You have selected the ${choicesName[choice - 1]} difficulty level.`);
+    console.log("Let's start the game!");
+  }
+  rl.close()
 }
 
 main();
