@@ -11,7 +11,7 @@
   <ul>
     <% articleList.forEach((article)=> { %>
       <li>
-        <%= article.title %>  <%= article.date_published %>
+        <a href="article/<%= article.fileName %>"><%= article.title %></a>  <%= article.date_published %>
       </li>
     <% }) %>
   </ul>
