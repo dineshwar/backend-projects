@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles</title>
+</head>
+<body>
+  <h1>Personal Blog</h1><a href="add">add</a>
+  <ul>
+    <% articleList.forEach((article)=> { %>
+      <li>
+        <%= article.title %>   <a href="edit/<%= article.fileName %>">Edit</a>  <a href="delete/<%= article.fileName %>">Delete</a> 
+      </li>
+    <% }) %>
+  </ul>
+</body>
