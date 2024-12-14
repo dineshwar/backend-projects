@@ -1,11 +1,16 @@
 import express, {Request, Response} from 'express';
 import fs from 'node:fs';
 import {Buffer} from 'node:buffer';
+import bodyParser from 'body-parser';
 
 const app = express();
-const articlesDir = "./articles/"
-app.set('view engine', 'ejs');
+const articlesDir = "./articles/";
 
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
 
 const homeAction = (req: Request, res: Response) => {
@@ -37,6 +42,8 @@ const articleAction = (req: Request, res: Response) => {
   if (JSON.stringify(fileInfo) == '{}') {
     res.status(404).render('pages/404')
   } else {
+    console.log(fileInfo);
+    
     res.render('pages/article', {
       fileInfo
     })
@@ -44,8 +51,6 @@ const articleAction = (req: Request, res: Response) => {
 }
 
 const decodeCredentials = (auth) => {
-  console.log(auth);
-  
   const encodedCredentials = auth
     .trim()
     .replace(/Basic\s+/i, '');
@@ -80,14 +85,81 @@ const adminPage = (req: Request, res: Response) => {
   });
 }
 
+
 const adminEdit = (req: Request, res: Response) => {
   const reqFile = req.params.id;
+
+  const filePath = path.join(articlesDir, `${reqFile}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('Article not found');
+  }
+
+  const fileCon = fs.readFileSync(filePath, 'utf8');
+  const article = JSON.parse(fileCon);
+
+  res.render('pages/edit-article', { article });
 }
+
+const saveEditedArticle = (req: Request, res: Response) => {
+  const reqFile = req.params.id;
+  const { title, date, content } = req.body;
+
+  if (!title || !date || !content) {
+    return res.status(400).send('All fields are required');
+  }
+
+  const filePath = path.join(articlesDir, `${reqFile}.json`);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('Article not found');
+  }
+
+  const updatedArticle = {
+    title,
+    content,
+    "date_published": date
+  };
+
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(updatedArticle, null, 2)); // Pretty print with 2 spaces
+    res.redirect('/');  // Redirect to home page or article list
+  } catch (err) {
+    console.error('Error saving article:', err);
+    res.status(500).send('There was an error saving the article');
+  }
+}
+
 
 const adminDelete = (req: Request, res: Response) => {
 }
 
 const adminAdd = (req: Request, res: Response) => {
+  console.log(req.body);
+  
+    const { title, date, content } = req.body;
+
+  if (!title || !date || !content) {
+    return res.status(400).send('All fields are required');
+  }
+
+  const newArticle = {
+    title,
+    content,
+    "date_published": date
+  };
+
+  // Generate a new file name based on the title or a counter if you want a unique name
+  const fileName = title.replace(/\s+/g, '_').toLowerCase() + '.json'; // e.g., "new_article.json"
+  const filePath = articlesDir+fileName;
+
+  // Save the new article to a JSON file
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(newArticle, null, 2)); // Pretty print with 2 spaces
+    res.redirect('/');  // Redirect to home page or list of articles
+  } catch (err) {
+    console.error('Error saving article:', err);
+    res.status(500).send('There was an error saving the article');
+  }
 
 }
 
@@ -96,6 +168,19 @@ app.get('/home', homeAction);
 app.get('/article/:id', articleAction, adminPage);
 
 app.get('/admin', checkAdmin, adminPage);
+
+app.route('/admin/add', checkAdmin)
+.get((req, res) => {
+  res.render('pages/adminArticle')
+})
+.post(adminAdd);
+
+app.route('/admin/edit/:id', checkAdmin)
+.get((req, res) => {
+  adminEdit
+})
+.post(saveEditedArticle);
+
 
 app.use(function(req, res, next) {
   res.status(404).render('pages/404')

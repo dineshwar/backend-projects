@@ -11,7 +11,7 @@
   <ul>
     <% articleList.forEach((article)=> { %>
       <li>
-        <%= article.title %>   <a href="edit/<%= article.fileName %>">Edit</a>  <a href="delete/<%= article.fileName %>">Delete</a> 
+        <%= article.title %>   <a href="admin/edit/<%= article.fileName %>">Edit</a>  <a href="admin/delete/<%= article.fileName %>">Delete</a> 
       </li>
     <% }) %>
   </ul>

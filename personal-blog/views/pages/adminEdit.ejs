@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Article</title>
+</head>
+<body>
+    <h1>Edit Article</h1>
+
+    <form action="/edit-article/<%= article.fileName %>" method="POST">
+        <div>
+            <label for="title">Article Title:</label>
+            <input type="text" id="title" name="title" value="<%= article.title %>" required>
+        </div>
+
+        <div>
+            <label for="date">Article Date:</label>
+            <input type="date" id="date" name="date" value="<%= article.date %>" required>
+        </div>
+
+        <div>
+            <label for="content">Article Content:</label>
+            <textarea id="content" name="content" rows="10" required><%= article.content %></textarea>
+        </div>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>
+
