@@ -88,8 +88,10 @@ const adminPage = (req: Request, res: Response) => {
 
 const adminEdit = (req: Request, res: Response) => {
   const reqFile = req.params.id;
+  console.log(reqFile);
+  
 
-  const filePath = path.join(articlesDir, `${reqFile}.json`);
+  const filePath = articlesDir+`${reqFile}.json`;
   if (!fs.existsSync(filePath)) {
     return res.status(404).send('Article not found');
   }
@@ -97,7 +99,7 @@ const adminEdit = (req: Request, res: Response) => {
   const fileCon = fs.readFileSync(filePath, 'utf8');
   const article = JSON.parse(fileCon);
 
-  res.render('pages/edit-article', { article });
+  res.render('pages/adminEdit', { article });
 }
 
 const saveEditedArticle = (req: Request, res: Response) => {
@@ -176,9 +178,7 @@ app.route('/admin/add', checkAdmin)
 .post(adminAdd);
 
 app.route('/admin/edit/:id', checkAdmin)
-.get((req, res) => {
-  adminEdit
-})
+.get(adminEdit)
 .post(saveEditedArticle);
 
 
