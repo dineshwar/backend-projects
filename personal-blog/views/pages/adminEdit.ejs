@@ -8,7 +8,7 @@
 <body>
     <h1>Edit Article</h1>
 
-    <form action="/edit-article/<%= article.fileName %>" method="POST">
+    <form action="<%= article.fileName %>" method="POST">
         <div>
             <label for="title">Article Title:</label>
             <input type="text" id="title" name="title" value="<%= article.title %>" required>

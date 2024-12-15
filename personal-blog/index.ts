@@ -88,7 +88,6 @@ const adminPage = (req: Request, res: Response) => {
 
 const adminEdit = (req: Request, res: Response) => {
   const reqFile = req.params.id;
-  console.log(reqFile);
   
 
   const filePath = articlesDir+`${reqFile}.json`;
@@ -98,6 +97,7 @@ const adminEdit = (req: Request, res: Response) => {
 
   const fileCon = fs.readFileSync(filePath, 'utf8');
   const article = JSON.parse(fileCon);
+  article.fileName = reqFile;
 
   res.render('pages/adminEdit', { article });
 }
@@ -110,7 +110,7 @@ const saveEditedArticle = (req: Request, res: Response) => {
     return res.status(400).send('All fields are required');
   }
 
-  const filePath = path.join(articlesDir, `${reqFile}.json`);
+  const filePath = articlesDir+`${reqFile}.json`;
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send('Article not found');
@@ -124,7 +124,7 @@ const saveEditedArticle = (req: Request, res: Response) => {
 
   try {
     fs.writeFileSync(filePath, JSON.stringify(updatedArticle, null, 2)); // Pretty print with 2 spaces
-    res.redirect('/');  // Redirect to home page or article list
+    res.redirect('/admin');  // Redirect to home page or article list
   } catch (err) {
     console.error('Error saving article:', err);
     res.status(500).send('There was an error saving the article');
@@ -133,6 +133,19 @@ const saveEditedArticle = (req: Request, res: Response) => {
 
 
 const adminDelete = (req: Request, res: Response) => {
+  const reqId = req.params.id;
+  const filePath = articlesDir + `${reqId}.json`;
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('Article not found');
+  }
+  try {
+    fs.unlinkSync(filePath);
+    res.redirect('/admin');
+  } catch (err) {
+    res.status(500).send('Unable to delete the article, right now.');
+  }
+
 }
 
 const adminAdd = (req: Request, res: Response) => {
@@ -150,14 +163,12 @@ const adminAdd = (req: Request, res: Response) => {
     "date_published": date
   };
 
-  // Generate a new file name based on the title or a counter if you want a unique name
-  const fileName = title.replace(/\s+/g, '_').toLowerCase() + '.json'; // e.g., "new_article.json"
+  const fileName = title.replace(/\s+/g, '_').toLowerCase() + '.json';
   const filePath = articlesDir+fileName;
 
-  // Save the new article to a JSON file
   try {
-    fs.writeFileSync(filePath, JSON.stringify(newArticle, null, 2)); // Pretty print with 2 spaces
-    res.redirect('/');  // Redirect to home page or list of articles
+    fs.writeFileSync(filePath, JSON.stringify(newArticle, null, 2));
+    res.redirect('/admin');
   } catch (err) {
     console.error('Error saving article:', err);
     res.status(500).send('There was an error saving the article');
@@ -171,16 +182,18 @@ app.get('/article/:id', articleAction, adminPage);
 
 app.get('/admin', checkAdmin, adminPage);
 
-app.route('/admin/add', checkAdmin)
-.get((req, res) => {
+app.route('/admin/add')
+.get(checkAdmin,(req, res) => {
   res.render('pages/adminArticle')
 })
-.post(adminAdd);
+.post(checkAdmin,adminAdd);
 
-app.route('/admin/edit/:id', checkAdmin)
-.get(adminEdit)
-.post(saveEditedArticle);
+app.route('/admin/edit/:id')
+.get(checkAdmin, adminEdit)
+.post(checkAdmin, saveEditedArticle);
 
+app.route('/admin/delete/:id')
+.get(checkAdmin, adminDelete);
 
 app.use(function(req, res, next) {
   res.status(404).render('pages/404')
