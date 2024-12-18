@@ -1,8 +1,14 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { serveDir } from "@std/http";
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+export default {
+  fetch(req) {
+    const url = new URL(req.url);
+
+    if (url.pathname === "/") {
+      return Response.json({
+        weather: "Rainy",
+      });
+    }
+    return new Response("Not found", { status: 404 });
+  },
+} satisfies Deno.ServeDefaultExport;
