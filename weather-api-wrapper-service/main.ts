@@ -3,6 +3,7 @@ import { serveDir } from "@std/http";
 export default {
   fetch(req) {
     const url = new URL(req.url);
+    const redis = '';
 
     if (url.pathname === "/") {
       return Response.json({
