@@ -1,3 +1,4 @@
+import "jsr:@std/dotenv/load";
 import { createClient } from 'npm:redis';
 
 export default {
