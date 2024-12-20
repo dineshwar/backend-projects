@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno serve --watch --allow-net -R main.ts"
+    "dev": "deno serve --watch  --allow-net -R main.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
