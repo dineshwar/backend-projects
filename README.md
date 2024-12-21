@@ -6,3 +6,4 @@
 5. [Number Guessing Game](https://roadmap.sh/projects/number-guessing-game)
 6. [Personal Blog](https://roadmap.sh/projects/personal-blog)
 7. [Weather API](https://roadmap.sh/projects/weather-api-wrapper-service)
+8. [Blogging Platform API](https://roadmap.sh/projects/blogging-platform-api)
