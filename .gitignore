@@ -1,2 +1,4 @@
 node_modules
 expense.json
+.env
+.*
