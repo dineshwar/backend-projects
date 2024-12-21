@@ -14,7 +14,6 @@
     "removeComments": true,
 
     "paths": {
-      "@src/*": ["src/*"] // absolute paths
     },
 
     "strictNullChecks": true, // Enable strict null checks

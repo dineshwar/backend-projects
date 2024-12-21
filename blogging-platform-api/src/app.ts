@@ -1,10 +1,8 @@
 import express from "express";
 import morgan from "morgan";
-import dotenv from "dotenv";
+import "dotenv/config";
 import helmet from "helmet";
 import { routes } from "./routes";
-
-dotenv.config();
 
 const app = express();
 
@@ -13,6 +11,6 @@ app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("api", routes);
+app.use("/api", routes);
 
 export { app };
