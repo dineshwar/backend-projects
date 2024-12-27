@@ -2,6 +2,13 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/connect";
 import { postTable } from "../db/schema";
 
+interface PostData {
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+}
+
 export async function getAllPost() {
   try {
     const posts = await db.select().from(postTable);
@@ -31,6 +38,16 @@ export async function deletePost(post_id: number) {
     return true;
   } catch (error) {
     console.error("Error fetching posts:", error);
+    throw error;
+  }
+}
+
+export async function insertPost(post_data: PostData) {
+  try {
+    const post = await db.insert(postTable).values(post_data).returning();
+    return post;
+  } catch (error) {
+    console.error("Error adding posts:", error);
     throw error;
   }
 }
