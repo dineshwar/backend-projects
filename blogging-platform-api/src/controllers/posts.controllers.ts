@@ -25,4 +25,19 @@ export const postControllers = {
       response.status(500).json({ message: "Failed to fetch post" });
     }
   },
+  async deletePost(request: Request, response: Response) {
+    try {
+      const { post_id } = request.params;
+      const postId = Number(post_id);
+      if (isNaN(postId)) {
+        response.status(400).json({ message: "Invalid post id" });
+        return;
+      }
+      await postService.deletePost(postId);
+      response.status(200).json({ message: "Post deleted" });
+      return;
+    } catch (error) {
+      response.status(500).json({ message: "Failed to fetch post" });
+    }
+  },
 };

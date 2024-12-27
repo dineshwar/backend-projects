@@ -1,4 +1,4 @@
-import { getAllPost, getPost } from "../models/posts.model";
+import { getAllPost, getPost, deletePost } from "../models/posts.model";
 
 export const postService = {
   async fetchAllPosts() {
@@ -22,6 +22,16 @@ export const postService = {
       // Log or handle error appropriately
       console.error("Error in fetching post:", error);
       throw new Error("Failed to fetch post");
+    }
+  },
+  async deletePost(post_id: number) {
+    try {
+      await deletePost(post_id);
+      return true;
+    } catch (error) {
+      // Log or handle error appropriately
+      console.error("Unable to delete post:", error);
+      throw new Error("Unable to delete post");
     }
   },
 };

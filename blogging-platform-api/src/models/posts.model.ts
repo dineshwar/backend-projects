@@ -24,3 +24,13 @@ export async function getPost(post_id: number) {
     throw error;
   }
 }
+
+export async function deletePost(post_id: number) {
+  try {
+    await db.delete(postTable).where(eq(postTable.id, post_id));
+    return true;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
+  }
+}
