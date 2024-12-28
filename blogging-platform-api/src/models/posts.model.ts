@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, like, or } from "drizzle-orm";
 import { db } from "../db/connect";
 import { postTable } from "../db/schema";
 
@@ -9,10 +9,24 @@ interface PostData {
   tags: string[];
 }
 
-export async function getAllPost() {
+export async function getAllPost(terms: string = "") {
   try {
-    const posts = await db.select().from(postTable);
-    return posts;
+    if (terms) {
+      const posts = await db
+        .select()
+        .from(postTable)
+        .where(
+          or(
+            like(postTable.title, terms),
+            like(postTable.content, terms),
+            like(postTable.category, terms)
+          )
+        );
+      return posts;
+    } else {
+      const posts = await db.select().from(postTable);
+      return posts;
+    }
   } catch (error) {
     console.error("Error fetching posts:", error);
     throw error;

@@ -4,7 +4,9 @@ import { Request, Response } from "express";
 export const postControllers = {
   async getPosts(request: Request, response: Response) {
     try {
-      const posts = await postService.fetchAllPosts();
+      const { term } = request.params;
+      const searchTerm = term ? String(term) : "";
+      const posts = await postService.fetchAllPosts(searchTerm);
       response.status(200).json(posts);
     } catch (error) {
       response.status(500).json({ message: "Failed to fetch posts" });

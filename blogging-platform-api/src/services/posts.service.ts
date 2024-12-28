@@ -14,9 +14,9 @@ interface PostData {
 }
 
 export const postService = {
-  async fetchAllPosts() {
+  async fetchAllPosts(terms: string) {
     try {
-      const posts = await getAllPost();
+      const posts = await getAllPost(terms);
       return posts;
     } catch (error) {
       // Log or handle error appropriately
