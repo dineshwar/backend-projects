@@ -1,4 +1,16 @@
-import { getAllPost, getPost, deletePost } from "../models/posts.model";
+import {
+  getAllPost,
+  getPost,
+  deletePost,
+  insertPost,
+} from "../models/posts.model";
+
+interface PostData {
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+}
 
 export const postService = {
   async fetchAllPosts() {
@@ -32,6 +44,16 @@ export const postService = {
       // Log or handle error appropriately
       console.error("Unable to delete post:", error);
       throw new Error("Unable to delete post");
+    }
+  },
+  async insertPost(post_data: PostData) {
+    try {
+      const post = await insertPost(post_data);
+      return post;
+    } catch (error) {
+      // Log or handle error appropriately
+      console.error("Unable to insert post:", error);
+      throw new Error("Unable to insert post");
     }
   },
 };

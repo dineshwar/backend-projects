@@ -40,4 +40,35 @@ export const postControllers = {
       response.status(500).json({ message: "Failed to fetch post" });
     }
   },
+  async insertPost(request: Request, response: Response) {
+    try {
+      const { title, content, category, tags } = request.body;
+      if (!title || typeof title != "string") {
+        response.status(400).json({ message: "Invalid title" });
+        return;
+      }
+      if (!content || typeof title != "string") {
+        response.status(400).json({ message: "Invalid content" });
+        return;
+      }
+      if (!category || typeof title != "string") {
+        response.status(400).json({ message: "Invalid category" });
+        return;
+      }
+      if (!tags || !Array.isArray(tags)) {
+        response.status(400).json({ message: "Invalid tags" });
+        return;
+      }
+      const post = await postService.insertPost({
+        title: String(title),
+        content: String(content),
+        category: String(category),
+        tags: tags,
+      });
+      response.status(200).json(post);
+      return;
+    } catch (error) {
+      response.status(500).json({ message: "Failed to fetch post" });
+    }
+  },
 };
