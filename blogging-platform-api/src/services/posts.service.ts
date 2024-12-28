@@ -3,6 +3,7 @@ import {
   getPost,
   deletePost,
   insertPost,
+  updatePost,
 } from "../models/posts.model";
 
 interface PostData {
@@ -54,6 +55,16 @@ export const postService = {
       // Log or handle error appropriately
       console.error("Unable to insert post:", error);
       throw new Error("Unable to insert post");
+    }
+  },
+  async updatePost(post_id: number, post_data: PostData) {
+    try {
+      const post = await updatePost(post_id, post_data);
+      return post;
+    } catch (error) {
+      // Log or handle error appropriately
+      console.error("Unable to update post:", error);
+      throw new Error("Unable to update post");
     }
   },
 };

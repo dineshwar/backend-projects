@@ -47,7 +47,21 @@ export async function insertPost(post_data: PostData) {
     const post = await db.insert(postTable).values(post_data).returning();
     return post;
   } catch (error) {
-    console.error("Error adding posts:", error);
+    console.error("Error adding post:", error);
+    throw error;
+  }
+}
+
+export async function updatePost(post_id: number, post_data: PostData) {
+  try {
+    const post = await db
+      .update(postTable)
+      .set(post_data)
+      .where(eq(postTable.id, post_id))
+      .returning();
+    return post;
+  } catch (error) {
+    console.error("Error update post:", error);
     throw error;
   }
 }
